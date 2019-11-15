@@ -1,7 +1,10 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include<stdio.h>
 #include<stdlib.h>
 #include<ctype.h>
 #include<string.h>
+#include<malloc.h>
 
 #define BUFFER 1024
 
@@ -12,7 +15,7 @@ struct _Cvor {
 	int elem;
 	pozicija next;
 };
- 
+
 int stvorimjesto(pozicija*);
 int citajizdatoteke(pozicija);
 int ispisilistu(pozicija);
@@ -21,22 +24,39 @@ int unija(pozicija, pozicija, pozicija);
 
 int main()
 {
-	pozicija p;
+	pozicija L1 = NULL, L2 = NULL, pres = NULL, un = NULL;
 
-	ispisilistu(p);
+	citajizdatoteke(L1);
+	citajizdatoteke(L2);
+
+	printf("Prva lista:\n");
+	ispisilistu(L1);
+	printf("Druga lista:\n");
+	ispisilistu(L2);
+
+	presjek(L1, L2, pres);
+	printf("Presjek dviju lista:\n");
+	ispisilistu(pres);
+
+	unija(L1, L2, un);
+	printf("Unija dviju lista:\n");
+	ispisilistu(un);
+
+	return 0;
+
 }
 
 int stvorimjesto(pozicija* p)
 {
 	pozicija q = NULL;
 
-	p = (pozicija)malloc(sizeof(pozicija)*BUFFER);
+	p = (pozicija*)malloc(sizeof(pozicija*)*BUFFER);
 
 	if (p = NULL)
 	{
 		printf("Greska, memorija nije alocirana.");
 	}
-	q =*p;
+	q = *p;
 	q->next = NULL;
 
 	return 0;
@@ -112,7 +132,14 @@ int unija(pozicija p1, pozicija p2, pozicija unija)
 			p2 = p2->next;
 		}
 
-		// fali dio algortima ???
+		if (unija->elem == q->elem)
+			free(q);
+		else
+		{
+			q->next = unija->next;
+			unija->next = q;
+			unija = q;
+		}
 	}
 
 	if (p1 != NULL)
